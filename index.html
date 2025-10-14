@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宠物星座 - 发现你和宠物的星座缘分</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 主页面 -->
+    <div id="home" class="page active">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="logo-icon">🐾</span>
+                    <span class="logo-text">宠物星座</span>
+                </div>
+            </div>
+        </nav>
+
+        <main class="hero-section">
+            <div class="hero-content">
+                <div class="hero-carousel-container">
+                    <div class="carousel-wrapper">
+                        <div class="carousel-slides" id="carousel-slides">
+                            <div class="carousel-slide active">
+                                <img src="image/lb_pic/lb1.png" alt="轮播图1">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="image/lb_pic/lb2.png" alt="轮播图2">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="image/lb_pic/lb3.png" alt="轮播图3">
+                            </div>
+                        </div>
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-slide="0"></span>
+                            <span class="indicator" data-slide="1"></span>
+                            <span class="indicator" data-slide="2"></span>
+                        </div>
+                    </div>
+                </div>
+                <p class="hero-subtitle">
+                    通过AI智能分析，探索宠物的星座特质，<br>
+                    了解你们之间的神奇适配关系
+                </p>
+                
+                <div class="feature-cards">
+                    <div class="feature-card">
+                        <div class="feature-icon"><img src="image/bot/boa.png" alt="AI智能分析"></div>
+                        <div class="feature-content">
+                            <h3>AI智能分析</h3>
+                            <p>基于先进的大语言模型，为你的宠物生成个性化星座分析</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><img src="image/bot/bob.png" alt="适配度测试"></div>
+                        <div class="feature-content">
+                            <h3>适配度测试</h3>
+                            <p>科学评估你与宠物的星座匹配度，发现更深层的情感连接</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><img src="image/bot/boc.png" alt="分享卡片"></div>
+                        <div class="feature-content">
+                            <h3>分享卡片</h3>
+                            <p>生成精美的结果卡片，与朋友分享你们的星座故事</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="startButton" class="cta-button">
+                    <span>开始测算</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- 主人星座选择页面 -->
+    <div id="owner-page" class="page">
+        <nav class="navbar">
+            <div class="nav-container">
+                <button class="back-button">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="page-title">主人信息</div>
+                <div class="progress-indicator">1/3</div>
+            </div>
+        </nav>
+
+        <main class="form-section">
+            <div class="form-container">
+                <div class="hero-carousel-container">
+                    <div class="carousel-wrapper">
+                        <div class="carousel-slides" id="carousel-slides-form">
+                            <div class="carousel-slide active">
+                                <img src="image/lb_2/lb_a.png" alt="轮播图A">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="image/lb_2/lb_b.png" alt="轮播图B">
+                            </div>
+                            <div class="carousel-slide">
+                                <img src="image/lb_2/lb_c.png" alt="轮播图C">
+                            </div>
+                        </div>
+                        <div class="carousel-indicators">
+                            <span class="indicator active" data-slide="0"></span>
+                            <span class="indicator" data-slide="1"></span>
+                            <span class="indicator" data-slide="2"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2>告诉我们关于你的信息</h2>
+                <p class="form-subtitle">了解你的星座来分析与宠物的适配关系</p>
+
+                <form class="input-form" id="petForm">
+
+
+                    <div class="input-group">
+                        <label for="owner-zodiac">选择你的星座</label>
+                        <select id="owner-zodiac">
+                            <option value="">选择你的星座</option>
+                            <option value="aries">白羊座 ♈</option>
+                            <option value="taurus">金牛座 ♉</option>
+                            <option value="gemini">双子座 ♊</option>
+                            <option value="cancer">巨蟹座 ♋</option>
+                            <option value="leo">狮子座 ♌</option>
+                            <option value="virgo">处女座 ♍</option>
+                            <option value="libra">天秤座 ♎</option>
+                            <option value="scorpio">天蝎座 ♏</option>
+                            <option value="sagittarius">射手座 ♐</option>
+                            <option value="capricorn">摩羯座 ♑</option>
+                            <option value="aquarius">水瓶座 ♒</option>
+                            <option value="pisces">双鱼座 ♓</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="next-button" id="ownerNextButton">
+                        <span>下一步</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- 宠物信息输入页面 -->
+    <div id="pet-page" class="page">
+        <nav class="navbar">
+            <div class="nav-container">
+                <button class="back-button">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="page-title">宠物信息</div>
+                <div class="progress-indicator">2/3</div>
+            </div>
+        </nav>
+
+        <!-- 轮播图组件 -->
+        <div class="carousel-container-lb3">
+            <div class="carousel-wrapper-lb3">
+                <div class="carousel-track-lb3"></div>
+            </div>
+        </div>
+
+        <main class="form-section">
+            <div class="form-container">
+                <h2>告诉我们关于你的宠物</h2>
+                <p class="form-subtitle">详细的信息能帮助我们提供更准确的星座分析</p>
+
+                <form class="input-form" id="petForm">
+                    <div class="input-group">
+                        <label for="pet-type">宠物类型</label>
+                        <select id="pet-type" required>
+                            <option value="">选择宠物类型</option>
+                            <option value="cat">猫咪 🐱</option>
+                            <option value="dog">狗狗 🐶</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+
+
+
+
+                    <div class="input-group">
+                        <label>性格标签 (可多选)</label>
+                        <div class="trait-tags">
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="active">
+                                <span>活泼好动</span>
+                                <div class="trait-description">
+                                    精力充沛，喜欢跑跳、玩耍，对玩具和外界刺激反应积极（常见于幼犬、幼猫或运动型品种，如边牧、布偶猫）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="quiet">
+                                <span>安静温顺</span>
+                                <div class="trait-description">
+                                    活动量适中，不吵闹，喜欢安静待在主人身边，适合公寓或老年人饲养（如金毛、加菲猫）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="energetic">
+                                <span>精力旺盛</span>
+                                <div class="trait-description">
+                                    持续活跃时间长，需要大量运动消耗精力（如哈士奇、孟加拉猫，需主人有足够时间陪伴）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="lazy">
+                                <span>慵懒随和</span>
+                                <div class="trait-description">
+                                    大部分时间喜欢睡觉、晒太阳，互动需求低但不抗拒抚摸（如英短猫、巴哥犬）
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 社交性维度 -->
+                    <div class="input-group">
+                        <label>社交性维度 (可多选)</label>
+                        <div class="trait-tags">
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="affectionate">
+                                <span>亲人粘人</span>
+                                <div class="trait-description">
+                                    主动靠近主人，喜欢被抱抱、蹭蹭，分离时可能轻微焦虑（如泰迪、暹罗猫）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="friendly">
+                                <span>友善热情</span>
+                                <div class="trait-description">
+                                    对陌生人、其他宠物无敌意，见面时会摇尾巴、主动亲近（如拉布拉多、橘猫）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="gentle">
+                                <span>温和包容</span>
+                                <div class="trait-description">
+                                    面对其他宠物的打闹或小孩的触碰，不轻易攻击，性格隐忍（如萨摩耶、缅因猫）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="social">
+                                <span>社交开朗</span>
+                                <div class="trait-description">
+                                    在户外或陌生环境中不胆怯，愿意接触新事物、新伙伴（如柯基、美短猫）
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 情绪与行为维度 -->
+                    <div class="input-group">
+                        <label>情绪与行为维度 (可多选)</label>
+                        <div class="trait-tags">
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="obedient">
+                                <span>乖巧听话</span>
+                                <div class="trait-description">
+                                    能快速理解主人指令（如"坐下""过来"），不随意拆家、乱尿（训练良好的宠物普遍具备）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="intelligent">
+                                <span>聪明机敏</span>
+                                <div class="trait-description">
+                                    学习能力强，能通过观察判断主人情绪，甚至自主解决简单问题（如边牧、德文卷毛猫）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="calm">
+                                <span>淡定从容</span>
+                                <div class="trait-description">
+                                    面对突发情况（如打雷、搬家）不慌乱，情绪波动小（如曼基康猫、柴犬）
+                                </div>
+                            </label>
+                            <label class="trait-tag">
+                                <input type="checkbox" name="traits" value="curious">
+                                <span>好奇探索</span>
+                                <div class="trait-description">
+                                    对新环境、新玩具充满兴趣，会主动嗅闻、触摸，无过度恐惧（健康宠物的正常特质）
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="next-button" id="petNextButton">
+                        <span>生成结果</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- 结果显示页面 -->
+    <div id="result-page" class="page">
+        <nav class="navbar">
+            <div class="nav-container">
+                <button class="back-button">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="page-title">分析结果</div>
+                <div class="progress-indicator">3/3</div>
+            </div>
+        </nav>
+
+        <main class="result-section">
+            <div class="result-container">
+                <div class="result-header">
+                    <div class="pet-avatar">
+                        <img id="zodiac-image" src="image/12/白羊座.png" alt="星座图片">
+                    </div>
+                    <div class="zodiac-badge" id="result-zodiac">
+                        <span class="zodiac-icon">♎</span>
+                        <span class="zodiac-name">天秤座</span>
+                    </div>
+                </div>
+
+                <div class="compatibility-card">
+                    <h3>与主人的适配度</h3>
+                    <div class="compatibility-score">
+                        <div class="score-display">
+                            <div class="score-text">
+                                <span class="score-number" id="compatibility-score">85</span>
+                                <span class="score-percent">%</span>
+                            </div>
+                            <div class="compatibility-level" id="compatibility-level">高度匹配</div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>个性分析</h3>
+                    <div class="analysis-content" id="analysis-text">
+                        <p>正在生成个性化分析...</p>
+                    </div>
+                </div>
+
+                <div class="story-card">
+                    <h3>星座小故事</h3>
+                    <div class="story-content" id="story-text">
+                        <p>正在生成温馨故事...</p>
+                    </div>
+                </div>
+
+                <div class="tips-card">
+                    <h3>互动建议</h3>
+                    <ul class="tips-list" id="tips-list">
+                        <li>正在生成建议...</li>
+                    </ul>
+                </div>
+
+                <div class="fun-tags-card">
+                    <h3>小彩蛋</h3>
+                    <div class="fun-tags-list" id="fun-tags-list">
+                        <span class="fun-tag">正在生成趣味标签...</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="secondary-button" id="restartButton">
+                        <span>重新测算</span>
+                    </button>
+                    <button class="primary-button" id="shareButton">
+                        <span>分享结果</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 8L10 4M6 8L10 12M6 8H14M2 8H4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="disclaimer">
+                    <p>* 本分析仅供娱乐参考，不构成科学依据</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 加载动画 -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>AI正在分析中...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
