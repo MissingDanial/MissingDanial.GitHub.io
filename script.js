@@ -305,7 +305,15 @@ class PetZodiacApp {
         // 特征标签点击事件
         const traitTags = document.querySelectorAll('.trait-tag');
         traitTags.forEach(tag => {
-            tag.addEventListener('click', () => {
+            tag.addEventListener('click', (e) => {
+                // 如果点击的是checkbox本身，让浏览器默认行为处理
+                if (e.target.type === 'checkbox') {
+                    this.updateTraitSelection();
+                    return;
+                }
+                
+                // 如果点击的是label区域，阻止事件冒泡并手动切换checkbox
+                e.preventDefault();
                 const checkbox = tag.querySelector('input[type="checkbox"]');
                 checkbox.checked = !checkbox.checked;
                 this.updateTraitSelection();
