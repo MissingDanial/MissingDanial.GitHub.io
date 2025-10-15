@@ -126,6 +126,15 @@
 
 
                     <div class="input-group">
+                        <label for="app-mode">选择功能模式</label>
+                        <select id="app-mode">
+                            <option value="">请选择功能模式</option>
+                            <option value="test-pet">测试已有宠物的星座匹配</option>
+                            <option value="recommend-pet">根据我的星座推荐宠物</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
                         <label for="owner-zodiac">选择你的星座</label>
                         <select id="owner-zodiac">
                             <option value="">选择你的星座</option>
@@ -185,7 +194,7 @@
                     <div class="input-group">
                         <label for="pet-type">宠物类型</label>
                         <select id="pet-type" required>
-                            <option value="">选择宠物类型</option>
+                            <option value="">想要的宠物类型</option>
                             <option value="cat">猫咪 🐱</option>
                             <option value="dog">狗狗 🐶</option>
                             <option value="other">其他</option>

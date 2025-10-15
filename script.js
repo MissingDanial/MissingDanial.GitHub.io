@@ -244,6 +244,7 @@ class PetZodiacApp {
         };
         // 轮播图状态管理 - 支持多个实例
         this.carousels = new Map(); // 使用Map来管理多个轮播图实例
+        this.petRecommendationSystem = new PetRecommendationSystem(); // 初始化宠物推荐系统
         this.init();
     }
 
@@ -263,7 +264,13 @@ class PetZodiacApp {
         // 主人信息页面下一步按钮
         const ownerNextButton = document.getElementById('ownerNextButton');
         if (ownerNextButton) {
-            ownerNextButton.addEventListener('click', () => this.goToPetPage());
+            ownerNextButton.addEventListener('click', () => this.handleOwnerSubmit());
+        }
+
+        // 模式选择器变化事件
+        const appModeSelect = document.getElementById('app-mode');
+        if (appModeSelect) {
+            appModeSelect.addEventListener('change', () => this.handleModeChange());
         }
 
         // 宠物信息页面生成结果按钮
@@ -1249,6 +1256,188 @@ class PetZodiacApp {
             });
         }
     }
+
+    // 处理模式变化
+    handleModeChange() {
+        const appModeSelect = document.getElementById('app-mode');
+        const selectedMode = appModeSelect.value;
+        
+        // 根据选择的模式显示或隐藏相关元素
+        if (selectedMode === 'recommend-pet') {
+            // 推荐宠物模式：只需要星座和宠物类型选择
+            this.showPetTypeSelector();
+        } else if (selectedMode === 'test-pet') {
+            // 测试宠物模式：隐藏宠物类型选择器
+            this.hidePetTypeSelector();
+        }
+    }
+
+    // 显示宠物类型选择器
+    showPetTypeSelector() {
+        // 检查是否已存在宠物类型选择器
+        let petTypeGroup = document.getElementById('pet-type-group');
+        if (!petTypeGroup) {
+            // 创建宠物类型选择器
+            petTypeGroup = document.createElement('div');
+            petTypeGroup.className = 'input-group';
+            petTypeGroup.id = 'pet-type-group';
+            petTypeGroup.innerHTML = `
+                <label for="pet-type-select">选择宠物类型</label>
+                <select id="pet-type-select">
+                    <option value="">请选择宠物类型</option>
+                    <option value="猫">猫咪 🐱</option>
+                    <option value="狗">狗狗 🐶</option>
+                </select>
+            `;
+            
+            // 插入到星座选择器后面
+            const ownerZodiacGroup = document.querySelector('#owner-zodiac').parentElement;
+            ownerZodiacGroup.parentNode.insertBefore(petTypeGroup, ownerZodiacGroup.nextSibling);
+        }
+        petTypeGroup.style.display = 'block';
+    }
+
+    // 隐藏宠物类型选择器
+    hidePetTypeSelector() {
+        const petTypeGroup = document.getElementById('pet-type-group');
+        if (petTypeGroup) {
+            petTypeGroup.style.display = 'none';
+        }
+    }
+
+    // 处理主人信息提交
+    async handleOwnerSubmit() {
+        const appModeSelect = document.getElementById('app-mode');
+        const ownerZodiacSelect = document.getElementById('owner-zodiac');
+        const selectedMode = appModeSelect.value;
+        const selectedZodiac = ownerZodiacSelect.value;
+
+        if (!selectedMode) {
+            alert('请选择功能模式');
+            return;
+        }
+
+        if (!selectedZodiac) {
+            alert('请选择您的星座');
+            return;
+        }
+
+        this.userData.ownerZodiac = selectedZodiac;
+
+        if (selectedMode === 'recommend-pet') {
+            // 推荐宠物模式
+            const petTypeSelect = document.getElementById('pet-type-select');
+            if (!petTypeSelect || !petTypeSelect.value) {
+                alert('请选择宠物类型');
+                return;
+            }
+
+            const selectedPetType = petTypeSelect.value;
+            
+            try {
+                this.showLoading();
+                const result = await this.petRecommendationSystem.getRecommendation(selectedZodiac, selectedPetType);
+                this.hideLoading();
+                this.displayPetRecommendations(result);
+            } catch (error) {
+                this.hideLoading();
+                this.showErrorMessage(error.message);
+            }
+        } else if (selectedMode === 'test-pet') {
+            // 测试宠物模式：继续原有流程
+            this.goToPetPage();
+        }
+    }
+
+    // 显示宠物推荐结果
+    displayPetRecommendations(result) {
+        // 创建推荐结果页面
+        const resultContainer = document.querySelector('.result-section .result-container');
+        if (!resultContainer) return;
+
+        // 清空现有内容
+        resultContainer.innerHTML = '';
+
+        // 创建推荐结果HTML
+        const recommendationsHTML = `
+            <div class="pet-recommendations">
+                <h2>为您推荐的宠物</h2>
+                <p class="recommendations-subtitle">基于您的星座，我们为您推荐以下宠物品种</p>
+                ${result.recommendations.map((rec, index) => `
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <span class="recommendation-rank">#${index + 1}</span>
+                            <h3 class="pet-breed">${rec.breed}</h3>
+                            <div class="compatibility-score">
+                                <span class="score-value">${rec.compatibility_score}%</span>
+                                <span class="score-label">适配度</span>
+                                <div class="score-progress-bar">
+                                    <div class="progress-bar-bg">
+                                        <div class="progress-bar-fill" data-score="${rec.compatibility_score}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pet-zodiac-info">
+                            <span class="zodiac-label">宠物星座</span>
+                            <span class="zodiac-value">${rec.pet_zodiac}</span>
+                        </div>
+                        <div class="reasoning-content">
+                            <h5>推荐理由</h5>
+                            <p>${rec.reasoning}</p>
+                        </div>
+                    </div>
+                `).join('')}
+                ${result.extra_tip ? `
+                    <div class="extra-tip">
+                        <h4>💡 额外建议</h4>
+                        <p>${result.extra_tip}</p>
+                    </div>
+                ` : ''}
+                <div class="action-buttons">
+                    <button type="button" class="secondary-button" onclick="app.restart()">
+                        <span>重新开始</span>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        resultContainer.innerHTML = recommendationsHTML;
+        this.showPage('result-page');
+        
+        // 启动进度条动画
+        this.animateProgressBars();
+    }
+    
+    // 进度条动画方法
+    animateProgressBars() {
+        // 延迟一点时间让DOM渲染完成
+        setTimeout(() => {
+            const progressBars = document.querySelectorAll('.progress-bar-fill');
+            progressBars.forEach((bar, index) => {
+                const score = parseInt(bar.getAttribute('data-score'));
+                // 对70-100分区间进行非线性映射，拉开视觉差异
+                const visualWidth = this.calculateVisualWidth(score);
+                // 为每个进度条添加不同的延迟，创造波浪效果
+                setTimeout(() => {
+                    bar.style.width = `${visualWidth}%`;
+                }, index * 200);
+            });
+        }, 100);
+    }
+
+    // 计算进度条的视觉宽度，对高分区间进行非线性映射
+    calculateVisualWidth(score) {
+        if (score < 70) {
+            // 70分以下保持线性映射，占用0-40%的视觉空间
+            return (score / 70) * 40;
+        } else {
+            // 70-100分映射到40-100%的视觉空间，使用指数函数拉开差距
+            const normalizedScore = (score - 70) / 30; // 将70-100分标准化到0-1
+            const exponentialMapping = Math.pow(normalizedScore, 0.6); // 使用0.6次幂，让差异更明显
+            return 40 + exponentialMapping * 60; // 映射到40-100%区间
+        }
+    }
 }
 
 // 页面加载完成后初始化应用
@@ -1310,5 +1499,188 @@ window.addEventListener('error', (e) => {
 // 添加未处理的Promise拒绝处理
 window.addEventListener('unhandledrejection', (e) => {
     console.error('未处理的Promise拒绝:', e.reason);
-    e.preventDefault();
 });
+
+// 宠物推荐功能类 (集成自1.js)
+class PetRecommendationSystem {
+    constructor() {
+        this.DASHSCOPE_API_KEY = 'sk-92f6a444480a4b9eba3dd923fd3424dc';
+        this.DASHSCOPE_BASE_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+        this.ZODIAC_SIGNS = [
+            "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座",
+            "天秤座", "天蝎座", "射手座", "摩羯座", "水瓶座", "双鱼座"
+        ];
+        this.zodiacMapping = {
+            'aries': '白羊座',
+            'taurus': '金牛座', 
+            'gemini': '双子座',
+            'cancer': '巨蟹座',
+            'leo': '狮子座',
+            'virgo': '处女座',
+            'libra': '天秤座',
+            'scorpio': '天蝎座',
+            'sagittarius': '射手座',
+            'capricorn': '摩羯座',
+            'aquarius': '水瓶座',
+            'pisces': '双鱼座'
+        };
+    }
+
+    // 构建LLM提示词
+    buildPrompt(zodiacSign, petType) {
+        const systemMessage = `你是一位资深的星座专家和宠物行为分析师。你的任务是根据用户的星座和偏好的宠物类型（猫或狗），分析两者性格的契合度，并提供三个不同的宠物品种推荐。
+
+请严格按照我提供的 JSON 结构输出结果，不要输出任何多余的解释性文字，确保所有字段都在，输出顺序按照"compatibility_score"降序排序！
+
+输出格式必须是标准的JSON格式：
+{
+  "recommendations": [
+    {
+      "breed": "推荐的宠物具体品种名称",
+      "pet_zodiac": "推荐宠物的星座（如：金牛座、双子座等）",
+      "compatibility_score": 数字（60-98之间的整数，根据实际契合度动态计算）,
+      "reasoning": "详细解释为什么该星座与该宠物相符的理由，包括宠物星座特征与用户星座的契合度分析，长度建议在100-150字。"
+    },
+    {
+      "breed": "第二个推荐的宠物品种名称",
+      "pet_zodiac": "第二个推荐宠物的星座",
+      "compatibility_score": 数字（60-98之间的整数，根据实际契合度动态计算）,
+      "reasoning": "第二个推荐的详细理由"
+    },
+    {
+      "breed": "第三个推荐的宠物品种名称",
+      "pet_zodiac": "第三个推荐宠物的星座",
+      "compatibility_score": 数字（60-98之间的整数，根据实际契合度动态计算）,
+      "reasoning": "第三个推荐的详细理由"
+    }
+  ],
+  "extra_tip": "给该用户的一句附加建议（可选）"
+}
+
+重要提示：请根据用户星座与宠物星座的实际契合度动态计算compatibility_score，不要使用固定数值。第一个推荐应该是最高分，第二个次之，第三个最低，但都要基于真实的星座匹配度计算。
+
+注意：compatibility_score必须是0到100之间的整数，按适配度从高到低排序。pet_zodiac字段应该描述推荐宠物所体现的星座特征。`;
+
+        const userMessage = `用户输入信息如下：
+星座：${zodiacSign}
+宠物类型：${petType}
+
+请根据${zodiacSign}的性格特点，推荐最适合的${petType}品种，并给出详细的分析理由。`;
+
+        return { systemMessage, userMessage };
+    }
+
+    // 调用千问API
+    async callQwenAPI(zodiacSign, petType) {
+        const { systemMessage, userMessage } = this.buildPrompt(zodiacSign, petType);
+        
+        const requestBody = {
+            model: "qwen-flash-2025-07-28",
+            messages: [
+                { role: "system", content: systemMessage },
+                { role: "user", content: userMessage }
+            ],
+            temperature: 0.7,
+            max_tokens: 1000
+        };
+
+        const response = await fetch(`${this.DASHSCOPE_BASE_URL}/chat/completions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.DASHSCOPE_API_KEY}`
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content.strip ? data.choices[0].message.content.strip() : data.choices[0].message.content.trim();
+    }
+
+    // 解析AI响应
+    parseAIResponse(responseContent) {
+        try {
+            // 如果响应包含代码块，提取JSON部分
+            let jsonContent = responseContent;
+            
+            if (responseContent.includes('```json')) {
+                const jsonStart = responseContent.indexOf('```json') + 7;
+                const jsonEnd = responseContent.indexOf('```', jsonStart);
+                jsonContent = responseContent.substring(jsonStart, jsonEnd).trim();
+            } else if (responseContent.includes('```')) {
+                const jsonStart = responseContent.indexOf('```') + 3;
+                const jsonEnd = responseContent.lastIndexOf('```');
+                jsonContent = responseContent.substring(jsonStart, jsonEnd).trim();
+            }
+            
+            const result = JSON.parse(jsonContent);
+            
+            // 验证必要字段
+            if (!result.recommendations || !Array.isArray(result.recommendations)) {
+                throw new Error('响应缺少必要字段: recommendations');
+            }
+            
+            if (result.recommendations.length < 3) {
+                throw new Error('推荐数量不足，需要至少3个推荐');
+            }
+            
+            // 验证每个推荐的必要字段
+            const requiredFields = ['breed', 'compatibility_score', 'reasoning', 'pet_zodiac'];
+            for (let i = 0; i < result.recommendations.length; i++) {
+                const recommendation = result.recommendations[i];
+                for (const field of requiredFields) {
+                    if (!(field in recommendation)) {
+                        throw new Error(`推荐${i + 1}缺少必要字段: ${field}`);
+                    }
+                }
+                
+                // 验证评分范围
+                const score = recommendation.compatibility_score;
+                if (!Number.isInteger(score) || score < 0 || score > 100) {
+                    throw new Error(`推荐${i + 1}的适配度评分必须是0-100之间的整数`);
+                }
+            }
+            
+            return result;
+            
+        } catch (error) {
+            throw new Error(`AI响应格式错误: ${error.message}`);
+        }
+    }
+
+    // 获取推荐
+    async getRecommendation(zodiacSign, petType) {
+        if (!zodiacSign || !petType) {
+            throw new Error('请选择您的星座和偏好的宠物类型');
+        }
+        
+        // 转换星座名称
+        const chineseZodiac = this.zodiacMapping[zodiacSign] || zodiacSign;
+        
+        if (!this.ZODIAC_SIGNS.includes(chineseZodiac)) {
+            throw new Error('无效的星座');
+        }
+        
+        if (!['猫', '狗'].includes(petType)) {
+            throw new Error('宠物类型只能是猫或狗');
+        }
+        
+        try {
+            // 调用千问API
+            const responseContent = await this.callQwenAPI(chineseZodiac, petType);
+            
+            // 解析响应
+            const result = this.parseAIResponse(responseContent);
+            
+            return result;
+            
+        } catch (error) {
+            console.error('请求失败:', error);
+            throw new Error(error.message || '获取推荐失败，请稍后重试');
+        }
+     }
+}

@@ -891,3 +891,263 @@ body {
         transform: translateX(-1500px); /* 移动到精灵图的一半位置实现无缝循环 */
     }
 }
+
+/* 宠物推荐结果页面样式 */
+.pet-recommendations {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.pet-recommendations h2 {
+    text-align: center;
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.recommendations-subtitle {
+    text-align: center;
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.5;
+}
+
+.recommendation-card {
+    background: var(--background-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 4px 20px var(--shadow-light);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--shadow-medium);
+}
+
+.recommendation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.recommendation-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--primary-blue);
+    color: white;
+    border-radius: 50%;
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.pet-breed {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.compatibility-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.score-value {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--primary-blue);
+    line-height: 1;
+}
+
+.score-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* 条形分数显示器样式 */
+.score-progress-bar {
+    width: 60px;
+    margin-top: var(--spacing-xs);
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: var(--background-secondary);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    /* 添加刻度线提示，帮助用户理解非线性映射 */
+    background-image: 
+        linear-gradient(90deg, transparent 39%, rgba(255,255,255,0.3) 40%, rgba(255,255,255,0.3) 41%, transparent 42%);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    position: relative;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: progressBarShine 2s ease-in-out;
+    /* 增强视觉效果，让不同分数段更明显 */
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 根据分数段设置不同颜色 */
+/* 90-100分: 深绿色 - 完美匹配 */
+.progress-bar-fill[data-score="100"],
+.progress-bar-fill[data-score^="9"] { 
+    background: #4caf50;
+}
+
+/* 80-89分: 黄色 - 高度匹配 */
+.progress-bar-fill[data-score^="8"] { 
+    background: #ffcc02;
+}
+
+/* 70-79分: 橙色 - 良好匹配 */
+.progress-bar-fill[data-score^="7"] { 
+    background: #ffa726;
+}
+
+/* 其他分数段保持原有渐变 */
+.progress-bar-fill[data-score^="6"],
+.progress-bar-fill[data-score^="5"],
+.progress-bar-fill[data-score^="4"],
+.progress-bar-fill[data-score^="3"],
+.progress-bar-fill[data-score^="2"],
+.progress-bar-fill[data-score^="1"] { 
+    background: linear-gradient(90deg, 
+        #ff6b6b 0%,     /* 低分段 - 红色 */
+        #ffa726 50%,    /* 中分段 - 橙色 */
+        #ffcc02 100%    /* 较高分段 - 黄色 */
+    );
+}
+
+/* 进度条光泽动画 */
+@keyframes progressBarShine {
+    0% {
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+}
+
+.pet-zodiac-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--background-secondary);
+    border-radius: var(--radius-sm);
+}
+
+.zodiac-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.zodiac-value {
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.reasoning-content {
+    margin-top: var(--spacing-md);
+}
+
+.reasoning-content h5 {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.reasoning-content p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.extra-tip {
+    background: var(--background-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 4px 20px var(--shadow-light);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-blue);
+}
+
+.extra-tip h4 {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.extra-tip p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+    .pet-recommendations {
+        padding: var(--spacing-md);
+    }
+    
+    .recommendation-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+    
+    .compatibility-score {
+        align-self: flex-end;
+    }
+    
+    .pet-zodiac-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+}
