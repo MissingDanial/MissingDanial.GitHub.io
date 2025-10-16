@@ -1242,17 +1242,21 @@ class PetZodiacApp {
         const score = scoreElement ? scoreElement.textContent : '未知';
         
         const shareText = `我的宠物是${petZodiac}，我们的匹配度是${score}分！快来测试你和宠物的星座匹配度吧！`;
+        const websiteUrl = 'https://missingdanial.github.io';
         
         if (navigator.share) {
             navigator.share({
                 title: '宠物星座匹配结果',
                 text: shareText,
-                url: window.location.href
+                url: websiteUrl
             });
         } else {
-            // 复制到剪贴板
-            navigator.clipboard.writeText(shareText).then(() => {
-                alert('结果已复制到剪贴板！');
+            // 复制网站链接到剪贴板
+            navigator.clipboard.writeText(websiteUrl).then(() => {
+                alert('已复制本网站链接到剪贴板！\nhttps://missingdanial.github.io');
+            }).catch(() => {
+                // 如果复制失败，显示链接让用户手动复制
+                alert('请手动复制网站链接：\nhttps://missingdanial.github.io');
             });
         }
     }
@@ -1441,8 +1445,9 @@ class PetZodiacApp {
 }
 
 // 页面加载完成后初始化应用
+let app; // 声明全局app变量
 document.addEventListener('DOMContentLoaded', () => {
-    new PetZodiacApp();
+    app = new PetZodiacApp(); // 将实例赋值给全局变量
 });
 
 // 添加一些实用工具函数
