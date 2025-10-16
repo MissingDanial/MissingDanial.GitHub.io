@@ -525,6 +525,14 @@ class PetZodiacApp {
     }
 
     showPage(pageId) {
+        console.log('showPage called with:', pageId);
+        
+        // 防止无限递归
+        if (this.currentPage === pageId) {
+            console.log('Already on page:', pageId);
+            return;
+        }
+        
         // 隐藏所有页面
         const pages = document.querySelectorAll('.page');
         pages.forEach(page => page.classList.remove('active'));
@@ -534,6 +542,9 @@ class PetZodiacApp {
         if (targetPage) {
             targetPage.classList.add('active');
             this.currentPage = pageId;
+            console.log('Switched to page:', pageId);
+        } else {
+            console.error('Page not found:', pageId);
         }
 
         // 更新导航栏
@@ -1217,6 +1228,7 @@ class PetZodiacApp {
     }
 
     restart() {
+        // 重置用户数据
         this.userData = {
             ownerZodiac: '',
             petType: '',
@@ -1231,7 +1243,20 @@ class PetZodiacApp {
         const traitCheckboxes = document.querySelectorAll('input[name="traits"]');
         traitCheckboxes.forEach(checkbox => checkbox.checked = false);
         
+        // 重置模式选择器到默认状态
+        const modeSelector = document.getElementById('modeSelector');
+        if (modeSelector) {
+            modeSelector.value = 'test';
+        }
+        
+        // 隐藏宠物类型选择器
+        this.hidePetTypeSelector();
+        
+        // 返回首页
         this.showPage('home');
+        
+        // 添加调试信息
+        console.log('重新开始 - 已重置所有数据并返回首页');
     }
 
     shareResult() {
