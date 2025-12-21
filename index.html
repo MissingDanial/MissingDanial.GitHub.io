@@ -23,6 +23,7 @@
             <li><a href="#resume">个人简历</a></li>
             <li><a href="#personal-projects">个人项目</a></li>
             <li><a href="#design-projects">设计项目</a></li>
+              <li><a href="#deep-learning-projects">深度学习项目</a></li>
           </ul>
         </nav>
       </div>
@@ -47,6 +48,7 @@
               <img src="figure/pic.jpg" alt="个人照片" loading="lazy" />
             </figure>
           </div>
+        </div>
         </div>
       </section>
 
@@ -403,6 +405,55 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Deep Learning Projects Section -->
+      <section id="deep-learning-projects" class="section muted">
+        <div class="container section-inner">
+          <div class="section-header">
+            <h2>深度学习项目</h2>
+            <p>深度学习的应用层面探索</p>
+          </div>
+
+          <div class="card">
+            <h3>基于深度学习的多模态城市声环境评估 · 深度学习运用</h3>
+            <p>
+              背景与目标：针对传统城市声环境评估效率低下、维度单一的问题，利用街景、卫星及声学时序数据，构建基于深度学习的多模态城市声环境评估模型。
+            </p>
+            <ul class="bullet-list">
+              <li>
+                主导项目流程设计，完成 300+ 个城市点位的多维度声环境调研与数据采集。
+              </li>
+              <li>
+                自主研发数据处理与特征提取路径，融合街景图像、卫星影像与声学时序数据进行训练与预测。
+              </li>
+              <li>
+                应用迁移学习进行街景图像分割，使用 CNN 处理卫星图像，采用 PANNs 解析音频时序特征，并设计混合模块整合多模态信息。
+              </li>
+              <li>
+                结果：在关键声环境指标上精准度提升约 12%，并纳入人群结构影响因素，输出更全面的城市声环境解决方案。
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3>使用大语言模型（LLM）改进贫困聚落识别模式 · 大语言模型运用</h3>
+            <p>
+              背景与目标：为解决传统贫困聚落识别方法数据成本高、效率低且模型“黑箱”的问题，利用 LLM 赋能深度学习模型，实现更高效、低成本且具解释性的识别方案。
+            </p>
+            <ul class="bullet-list">
+              <li>
+                设计并实施 LLM 与 CNN 结合的贫困聚落识别方法，将卫星影像先经由 LLM 语义化处理并规范输出。
+              </li>
+              <li>
+                将 LLM 生成的语义特征与 CNN 提取的视觉特征融合，进行贫困倾向性判定并生成可解释性文本。
+              </li>
+              <li>
+                结果：数据处理量降低约 80%，识别准确率与多源数据方法相当，同时显著提升效率并减轻成本，生成的解释性文本有助于决策透明化。
+              </li>
+            </ul>
           </div>
         </div>
       </section>
